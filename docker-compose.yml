@@ -2,7 +2,7 @@ version: "3"
 services:
     frontend:
         build: ./frontend
-        container_name: nuxt-app
+        container_name: secret-frontend
         volumes:
             - ./frontend:/var/www/frontend
         ports:
@@ -14,6 +14,7 @@ services:
     backend:
         build:
             context: etc/dockerize/backend
+        container_name: secret-backend
         volumes:
             - ./backend:/app
             - ./etc/php:/usr/local/etc/php/local.conf.d/
