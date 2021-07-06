@@ -1,0 +1,40 @@
+version: "3"
+services:
+    frontend:
+        build: ./frontend
+        container_name: nuxt-app
+        volumes:
+            - ./frontend:/var/www/frontend
+        ports:
+        - "3000:3000"
+        command: "npm run dev"
+        networks:
+            secret-server:
+
+    backend:
+        build:
+            context: etc/dockerize/backend
+        volumes:
+            - ./backend:/app
+            - ./etc/php:/usr/local/etc/php/local.conf.d/
+        environment:
+            PHP_INI_SCAN_DIR: "/usr/local/etc/php/conf.d/:/usr/local/etc/php/local.conf.d/"
+        command: "php artisan serve --host=0.0.0.0 --port=8080"
+        ports:
+            - "8889:8080"
+        networks:
+            secret-server:
+
+    postgres:
+        image: postgres:9.5-alpine
+        container_name: postgres
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=q
+            - POSTGRES_DB=secret_server
+        ports:
+            - "5432:5432"
+        networks:
+            secret-server:
+networks:
+    secret-server:
